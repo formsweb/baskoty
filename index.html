@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#7C3AED" />
+  <title>حكايتنا يا بسكوته</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #7C3AED;
+      --primary-dark: #5B21B6;
+      --lavender-light: #E9D5FF;
+      --lavender-lighter: #F3E8FF;
+      --text-dark: #4C1D95;
+      --text-body: #3B1675;
+      --border-lavender: #D8B4FE;
+      --paper: #FBF7FF;
+      --shadow-soft: 0 12px 30px rgba(46, 16, 101, 0.25);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #7C3AED 0%, #6D28D9 100%);
+      color: var(--text-dark);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: calc(28px + env(safe-area-inset-bottom));
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+    body.intro-active { overflow: hidden; height: 100vh; }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      opacity: 0;
+    }
+    body.ready .container { animation: siteReveal 1.1s ease forwards; }
+    @keyframes siteReveal {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============ رسالة البداية ============ */
+    .intro {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      padding: 28px 24px;
+      background: radial-gradient(circle at 50% 30%, #8B5CF6 0%, #6D28D9 55%, #4C1D95 100%);
+      color: #fff; text-align: center;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+    .intro.hide { opacity: 0; visibility: hidden; }
+    .intro-box { position: relative; z-index: 1; max-width: 420px; }
+    .intro-icon { font-size: 2.6rem; display: block; margin-bottom: 18px; animation: heartbeat 1.4s ease-in-out infinite; }
+    .intro-line {
+      font-size: 1.22rem; font-weight: 700; line-height: 1.95;
+      opacity: 0; transform: translateY(14px);
+      animation: lineIn 1.1s ease forwards;
+    }
+    .intro-line + .intro-line { margin-top: 10px; }
+    .intro-line:nth-of-type(1) { animation-delay: .6s; }
+    .intro-line:nth-of-type(2) { animation-delay: 3.4s; }
+    .intro-line:nth-of-type(3) { animation-delay: 6.6s; font-weight: 800; color: var(--lavender-light); }
+    @keyframes lineIn { to { opacity: 1; transform: translateY(0); } }
+    .intro-progress {
+      position: absolute; bottom: 26px; left: 28px; right: 28px;
+      height: 4px; border-radius: 999px; background: rgba(255,255,255,.2); overflow: hidden;
+    }
+    .intro-progress span {
+      display: block; height: 100%; width: 100%;
+      background: var(--lavender-light);
+      transform-origin: right center;
+      animation: introBar 12s linear forwards;
+    }
+    @keyframes introBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.22); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.14); }
+    }
+    .float-heart { position: absolute; bottom: -40px; opacity: 0; animation: floatUp linear infinite; }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: .6; }
+      100% { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+    }
+
+    /* ============ Header ============ */
+    .hero-header { text-align: center; padding: 12px 8px 4px; color: #FFFFFF; }
+    .hero-badge {
+      display: inline-block; background: var(--lavender-light); color: var(--text-dark);
+      font-size: 0.85rem; font-weight: 800; padding: 6px 18px; border-radius: 999px; margin-bottom: 10px;
+    }
+    .hero-title { font-size: 2.05rem; font-weight: 800; color: #FFFFFF; line-height: 1.3; }
+    .hero-subtitle { font-size: 0.98rem; color: var(--lavender-lighter); margin-top: 6px; }
+
+    .section-card {
+      background: var(--lavender-lighter); border-radius: var(--radius-lg);
+      padding: 20px 16px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-lavender);
+    }
+    .section-heading { font-size: 1.22rem; font-weight: 800; color: var(--text-dark); margin-bottom: 14px; text-align: center; }
+
+    /* ============ الألبوم (شكل جديد) ============ */
+    .album {
+      position: relative; padding: 14px 14px 14px 22px; border-radius: 18px;
+      background: linear-gradient(145deg, #6D28D9, #4C1D95);
+      box-shadow: 0 14px 30px rgba(46, 16, 101, .35);
+    }
+    .album::before {
+      content: ""; position: absolute; inset: 6px;
+      border: 2px dashed rgba(233, 213, 255, .35); border-radius: 14px; pointer-events: none;
+    }
+    .album-spine {
+      position: absolute; top: 0; bottom: 0; right: 0; width: 16px; border-radius: 0 18px 18px 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.28), rgba(255,255,255,.06) 60%, rgba(0,0,0,.18));
+    }
+    .album-page {
+      position: relative; margin-right: 10px; padding: 26px 14px 18px; border-radius: 10px;
+      background: repeating-linear-gradient(0deg, transparent 0 27px, rgba(124,58,237,.06) 27px 28px), var(--paper);
+      box-shadow: inset 0 0 0 1px var(--border-lavender), 0 6px 14px rgba(0,0,0,.18);
+      touch-action: pan-y; user-select: none; overflow: hidden;
+    }
+    .polaroid-wrap { position: relative; width: 82%; max-width: 300px; margin: 0 auto; }
+    .polaroid-wrap::before, .polaroid-wrap::after {
+      content: ""; position: absolute; inset: 0; background: #fff; border-radius: 4px;
+      box-shadow: 0 4px 10px rgba(76,29,149,.18); z-index: 0;
+    }
+    .polaroid-wrap::before { transform: rotate(5deg); }
+    .polaroid-wrap::after  { transform: rotate(-4deg); }
+    .polaroid {
+      --tilt: -2deg; position: relative; z-index: 1; background: #fff; padding: 10px 10px 12px;
+      border-radius: 4px; box-shadow: 0 8px 18px rgba(46, 16, 101, .28); transform: rotate(var(--tilt));
+    }
+    .tape {
+      position: absolute; top: -12px; left: 50%; width: 78px; height: 24px;
+      transform: translateX(-50%) rotate(-3deg); background: rgba(216, 180, 254, .75); z-index: 2;
+    }
+    .polaroid-photo { position: relative; width: 100%; aspect-ratio: 4 / 5; background: var(--lavender-light); overflow: hidden; }
+    .polaroid-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .polaroid-caption { margin-top: 10px; min-height: 2.2em; text-align: center; font-size: 1.02rem; font-weight: 800; color: var(--text-dark); line-height: 1.5; }
+    .polaroid.out-next { animation: outNext .26s ease-in forwards; }
+    .polaroid.out-prev { animation: outPrev .26s ease-in forwards; }
+    .polaroid.in-next  { animation: inNext .38s cubic-bezier(.22,1,.36,1); }
+    .polaroid.in-prev  { animation: inPrev .38s cubic-bezier(.22,1,.36,1); }
+    @keyframes outNext { to { transform: translateX(-80px) rotate(-12deg); opacity: 0; } }
+    @keyframes outPrev { to { transform: translateX(80px) rotate(12deg); opacity: 0; } }
+    @keyframes inNext { from { transform: translateX(80px) rotate(12deg); opacity: 0; } to { transform: rotate(var(--tilt)); opacity: 1; } }
+    @keyframes inPrev { from { transform: translateX(-80px) rotate(-12deg); opacity: 0; } to { transform: rotate(var(--tilt)); opacity: 1; } }
+
+    .gallery-placeholder {
+      position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px; padding: 20px; text-align: center; color: var(--text-dark);
+      background: linear-gradient(145deg, var(--lavender-light), var(--lavender-lighter));
+    }
+    .gallery-placeholder-icon { font-size: 2.2rem; line-height: 1; }
+    .gallery-placeholder-text { font-size: 0.95rem; font-weight: 700; opacity: 0.85; }
+
+    .gallery-nav-btn {
+      position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--border-lavender); background: rgba(243, 232, 255, .95); color: var(--text-dark);
+      font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(76, 29, 149, 0.2); z-index: 3;
+    }
+    .gallery-nav-btn:active { transform: translateY(-50%) scale(.92); }
+    .gallery-nav-btn.prev { right: 6px; }
+    .gallery-nav-btn.next { left: 6px; }
+    .gallery-counter { text-align: center; font-size: .84rem; font-weight: 600; color: var(--text-body); margin-top: 14px; }
+    .gallery-dots { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; }
+    .gallery-dot { width: 10px; height: 10px; border-radius: 999px; border: none; background: var(--border-lavender); cursor: pointer; padding: 0; transition: width .25s ease, background .25s ease; }
+    .gallery-dot.active { width: 26px; background: var(--primary); }
+
+    /* ============ الظرف + الباسورد ============ */
+    .envelope-section { text-align: center; }
+    .envelope-hint { font-size: 0.92rem; font-weight: 600; color: var(--text-body); margin-bottom: 16px; }
+    .envelope-stage { position: relative; width: 100%; max-width: 340px; margin: 0 auto; perspective: 1000px; }
+    .envelope-btn { width: 100%; background: transparent; border: none; cursor: pointer; padding: 0; font-family: inherit; display: block; }
+    .envelope-box {
+      position: relative; width: 100%; height: 200px; background: linear-gradient(145deg, #7C3AED, #5B21B6);
+      border-radius: 18px; box-shadow: 0 10px 24px rgba(76, 29, 149, 0.28); overflow: hidden;
+    }
+    .envelope-box.wiggle { animation: envelopeWiggle .45s ease; }
+    @keyframes envelopeWiggle {
+      0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(-2deg) scale(1.02); }
+      55% { transform: rotate(2deg) scale(1.02); } 100% { transform: rotate(0deg) scale(1); }
+    }
+    .envelope-flap {
+      position: absolute; top: 0; left: 0; right: 0; height: 105px; background: linear-gradient(180deg, #6D28D9, #7C3AED);
+      clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top center;
+      transition: transform .55s cubic-bezier(.22,1,.36,1); z-index: 3;
+    }
+    .envelope-pocket {
+      position: absolute; inset: 0; background: linear-gradient(180deg, rgba(233,213,255,.14) 0%, rgba(76,29,149,.4) 100%);
+      clip-path: polygon(0 100%, 50% 42%, 100% 100%); z-index: 2;
+    }
+    .envelope-seal {
+      position: absolute; top: 86px; left: 50%; transform: translateX(-50%); width: 48px; height: 48px; border-radius: 50%;
+      background: var(--lavender-lighter); color: var(--primary); display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; box-shadow: 0 4px 14px rgba(0,0,0,.18); z-index: 4; transition: opacity .3s ease;
+      animation: sealBeat 1.8s ease-in-out infinite;
+    }
+    @keyframes sealBeat {
+      0%, 100% { transform: translateX(-50%) scale(1); } 15% { transform: translateX(-50%) scale(1.14); }
+      30% { transform: translateX(-50%) scale(1); } 45% { transform: translateX(-50%) scale(1.08); }
+    }
+    .envelope-label { position: absolute; bottom: 18px; left: 0; right: 0; text-align: center; color: #FFFFFF; font-weight: 700; font-size: .98rem; z-index: 4; transition: opacity .3s ease; }
+    .envelope-stage.open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+    .envelope-stage.open .envelope-seal, .envelope-stage.open .envelope-label { opacity: 0; pointer-events: none; animation: none; }
+
+    .letter-paper {
+      margin-top: 14px; background: var(--lavender-light); border: 0 solid var(--border-lavender); border-radius: var(--radius-md);
+      text-align: right; max-height: 0; opacity: 0; overflow: hidden; transform: translateY(-16px);
+      transition: max-height .6s ease, opacity .5s ease, transform .5s ease, padding .4s ease; padding: 0 16px;
+    }
+    .envelope-stage.open + .letter-paper {
+      max-height: 420px; opacity: 1; transform: translateY(0); padding: 18px 16px; overflow-y: auto;
+      -webkit-overflow-scrolling: touch; border-width: 1px;
+    }
+    .letter-content p { font-size: .98rem; font-weight: 600; color: var(--text-dark); margin-bottom: 12px; line-height: 1.85; }
+    .letter-content p:last-child { margin-bottom: 0; }
+
+    .lock-panel { display: none; margin: 16px auto 0; max-width: 340px; padding: 16px 14px; background: var(--lavender-light); border: 1px solid var(--border-lavender); border-radius: var(--radius-md); }
+    .lock-panel.show { display: block; animation: lockIn .4s ease; }
+    .lock-panel.shake { animation: lockShake .45s ease; }
+    @keyframes lockIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes lockShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-9px); } 40% { transform: translateX(9px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(6px); } }
+    .lock-title { font-weight: 800; font-size: 1rem; color: var(--text-dark); margin-bottom: 10px; }
+    .lock-input {
+      width: 100%; min-height: 48px; padding: 10px 14px; font-family: inherit; font-size: 16px; font-weight: 700;
+      text-align: center; color: var(--text-dark); background: #fff; border: 2px solid var(--border-lavender); border-radius: 12px; outline: none;
+    }
+    .lock-input::placeholder { color: #A78BCB; font-weight: 600; }
+    .lock-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124, 58, 237, .18); }
+    .lock-btn { margin-top: 10px; width: 100%; min-height: 48px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-family: inherit; font-size: 1rem; font-weight: 800; cursor: pointer; }
+    .lock-btn:active { background: var(--primary-dark); }
+    .lock-msg { min-height: 1.6em; margin-top: 8px; font-size: .88rem; font-weight: 700; color: var(--primary-dark); }
+
+    .letter-toggle-btn {
+      margin-top: 12px; background: var(--lavender-light); color: var(--text-dark); border: 1px solid var(--border-lavender);
+      border-radius: 999px; padding: 10px 22px; font-family: inherit; font-size: .92rem; font-weight: 800; cursor: pointer; display: none; min-height: 44px;
+    }
+    .envelope-stage.open ~ .letter-toggle-btn { display: inline-block; }
+
+    /* ============ الأغنية + الكرتون ============ */
+    .song-card { display: flex; flex-direction: column; gap: 16px; }
+    .song-player-ui { display: flex; align-items: center; gap: 14px; background: var(--lavender-light); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-lavender); }
+    .song-thumb-wrap {
+      width: 84px; height: 84px; border-radius: 14px; overflow: hidden; flex-shrink: 0; background: var(--primary);
+      display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 6px 16px rgba(124, 58, 237, .25);
+    }
+    .song-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .song-thumb-fallback { display: none; color: #FFFFFF; font-size: 2rem; font-weight: 700; }
+    .song-info { flex: 1; min-width: 0; }
+    .song-tag { font-size: .8rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 2px; }
+    .song-title { font-size: 1.25rem; font-weight: 800; color: var(--text-dark); }
+    .song-platform { font-size: .85rem; font-weight: 600; color: var(--text-body); margin-top: 2px; }
+    .song-play-btn {
+      position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; min-height: 54px; background: var(--primary); color: #FFFFFF; text-decoration: none; font-weight: 800;
+      font-size: 1.06rem; border-radius: 14px; box-shadow: 0 8px 20px rgba(124, 58, 237, .3); cursor: pointer;
+    }
+    .song-play-btn:active { background: var(--primary-dark); transform: scale(.98); }
+    .pulse-btn { animation: btnPulse 2.2s ease-out infinite; }
+    @keyframes btnPulse {
+      0%   { box-shadow: 0 8px 20px rgba(124,58,237,.3), 0 0 0 0 rgba(124,58,237,.45); }
+      70%  { box-shadow: 0 8px 20px rgba(124,58,237,.3), 0 0 0 16px rgba(124,58,237,0); }
+      100% { box-shadow: 0 8px 20px rgba(124,58,237,.3), 0 0 0 0 rgba(124,58,237,0); }
+    }
+
+    /* ============ العدّاد ============ */
+    .counter-total-box { background: var(--primary); color: #FFFFFF; border-radius: var(--radius-md); padding: 16px; text-align: center; margin-bottom: 14px; }
+    .counter-total-number { font-size: 2.25rem; font-weight: 800; line-height: 1.2; }
+    .counter-total-label { font-size: .94rem; font-weight: 600; color: var(--lavender-lighter); margin-top: 2px; }
+    .counter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+    .counter-unit { background: var(--lavender-light); border: 1px solid var(--border-lavender); border-radius: 14px; padding: 12px 6px; text-align: center; }
+    .counter-value { font-size: 1.35rem; font-weight: 800; color: var(--text-dark); line-height: 1.2; }
+    .counter-label { font-size: .8rem; font-weight: 700; color: var(--text-body); margin-top: 4px; }
+    .confession-card { background: var(--lavender-light); border: 1px solid var(--border-lavender); border-radius: var(--radius-md); padding: 14px 16px; text-align: center; }
+    .confession-title { font-size: 1.02rem; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
+    .confession-date { font-size: .92rem; font-weight: 600; color: var(--text-body); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .intro-line { opacity: 1; transform: none; }
+      .container { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="intro-active">
+
+  <!-- ❣️💕 رسالة البداية: بتظهر 12 ثانية قبل الموقع. عدّلي الكلام جوه الـ <p> -->
+  <div class="intro" id="intro">
+    <div class="intro-box">
+      <span class="intro-icon" aria-hidden="true">❣️💕</span>
+      <p class="intro-line">حبيت أعمل الـ web site بكل تفاصيله اللي بتحبيها ❣️</p>
+      <p class="intro-line">اللون الموف عشان بتحبيه، وحاولت أجمع فيه ذكرياتنا 💕</p>
+      <p class="intro-line">وفيه مفاجأة تانية في آخر الـ web site.. إنتي عمرك ما تتخيليها ❣️💕</p>
+    </div>
+    <div class="intro-progress" aria-hidden="true"><span></span></div>
+  </div>
+
+  <main class="container">
+    <header class="hero-header">
+      <span class="hero-badge">قصتنا</span>
+      <h1 class="hero-title">حكايتنا يا بسكوته</h1>
+      <p class="hero-subtitle">كل صورة هنا فيها حكاية وضحكة وذكرى حلوة بينا</p>
+    </header>
+
+    <!-- 📖 ألبوم الصور (الصور واللينكات في الـ script تحت، عند memories) -->
+    <section class="section-card" aria-label="ألبوم الصور والذكريات">
+      <h2 class="section-heading">ألبوم ذكرياتنا 📖</h2>
+      <div class="album">
+        <div class="album-spine" aria-hidden="true"></div>
+        <div class="album-page" id="galleryWrapper">
+          <button class="gallery-nav-btn prev" id="prevBtn" type="button" aria-label="الصورة السابقة">&#8250;</button>
+          <button class="gallery-nav-btn next" id="nextBtn" type="button" aria-label="الصورة التالية">&#8249;</button>
+          <div class="polaroid-wrap">
+            <figure class="polaroid" id="polaroid">
+              <span class="tape" aria-hidden="true"></span>
+              <div class="polaroid-photo">
+                <img id="albumImg" alt="" />
+                <div class="gallery-placeholder" id="albumPlaceholder">
+                  <div class="gallery-placeholder-icon">💜</div>
+                  <div class="gallery-placeholder-text">مساحة الصورة</div>
+                </div>
+              </div>
+              <figcaption class="polaroid-caption" id="galleryCaption"></figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <p class="gallery-counter" id="galleryCounter"></p>
+      <div class="gallery-dots" id="galleryDots" aria-label="مؤشرات الصور"></div>
+    </section>
+
+    <!-- 💌 الرسالة (مقفولة بباسورد) -->
+    <section class="section-card envelope-section" aria-label="رسالة في ظرف">
+      <h2 class="section-heading">رسالة ليكي يا بسكوته</h2>
+      <p class="envelope-hint" id="envelopeHint">مهما مرت أيام ومهما كبرنا انا عيني عمرها ما هتشوف اجمل واحلي منك</p>
+
+      <div class="envelope-stage" id="envelopeStage">
+        <button class="envelope-btn" id="envelopeBtn" type="button" aria-expanded="false" aria-controls="letterPaper">
+          <div class="envelope-box" id="envelopeBox">
+            <div class="envelope-flap"></div>
+            <div class="envelope-pocket"></div>
+            <div class="envelope-seal" aria-hidden="true">💜</div>
+            <div class="envelope-label">افتحي الرسالة</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- 💌 نص الرسالة: عدّلي الكلام جوه الـ <p> (كل <p> = فقرة) -->
+      <div class="letter-paper" id="letterPaper" tabindex="0">
+        <div class="letter-content">
+          <p>يا بسكوتة قلبي، ورفيقة أيامي ومشواري، يا صاحبتي في كل وقت، وقرة عيني وكل ما ليا.</p>
+          <p>سنة عدّت وأنا عايش في دفا حبك وضحكتك.. سنة بكل تفاصيلها ومواقفها، مفيش لحظة مرّت إلا وقلبي اختارك فيها من تاني. عدّت وإحنا بنتعلم وبنعدّي كل خطوة إيد في إيد، ولسه ده كله مجرد سطر أول في حكاية كبيرة بنرسم ملامحها سوا.</p>
+          <p>إنتي بنوتة جميلة بهدوئك وبساطتك، وكل تفصيلة فيكي بتطمني. بقيتي محور حياتي ويومي اللي مبعرفش أعدّيه من غيرك. حتى زعلنا وخناقاتنا بحبها، لأنها في كل مرة بتثبتلي إن حبنا وتمسكنا ببعض أكبر من أي وقت عادي.</p>
+          <p>اتعلمت منك في السنة دي معاني كتير حلوة، وهفضل دايمًا أتعلم منك يا غالية. كل سنة وإنتي منوّرة دنيتي ومحليّاها يا بطاية قلبي 💕💕💕💕💕، وكل سنة وإنتي أجمل وأرق بنوتة بتتم الـ 21 سنة وهي بتكبر وتحلو في عيني أكتر وأكتر.</p>
+          <p>جوايا كلام ومشاعر أكبر من إنها تتكتب، بس متأكد إن قلبك حاسس بيها وعارفها. نفسي أهديكي الدنيا كلها، ونفضل في كل عيد ميلاد، وفي كل وقت حلو أو صعب، دايمًا سوا.</p>
+          <p>أنا فخور بيكي أوي، بكل خطوة وبكل تعب بتتعبيه عشان توصلي لحلمك، وعايزك دايمًا مطمنة إني جنبك وفي ضهرك. ويا رب ييجي اليوم اللي نعدّي فيه كل ده ونحتفل وإحنا سوا في الحلال وقدام الدنيا كلها.</p>
+          <p>حابب أختم كلامي بإني ممتن أوي لليوم اللي ربنا بعتلي فيه أجمل نعمة في عمري. لو الزمن رجع بيا تاني، هختارك إنتي طول حياتي لأنك رزق جميل ما يتعوضش، وعمري ما ندمت لحظة على اليوم ده.. بالعكس، بحمد ربنا كل يوم على وجودك، ومحدش أبدًا يعرف يعيش من غير روحه.</p>
+          <p>بحبك يا بسكوتة، وبحب كل ثانية وإنتي في حياتي، وكل حاجة في وجودك. ربنا يخليكي ليا وما يحرمنيش منك ولا من وجودك العسل ده، ونفضل سوا لآخر العمر نحقق كل اللي بنحلم بيه من دلوقتي.</p>
+          <p>شكرًا على كل تعب تعبتيه معايا، وعلى كل وقت استحملتيني فيه وانتي تستاهلي كل حاجه حلوه في الدنيا يحبيبي</p>
+          <p>بحبك اوي اوي ❣️🫂🫂🫂🫂🫂🌎</p>
+        </div>
+      </div>
+
+      <!-- 🔒 خانة الباسورد: الجملة الرمادية جوه الخانة هي الـ placeholder -->
+      <div class="lock-panel" id="lockPanel">
+        <p class="lock-title">🔒 اكتبي الباسورد عشان الرسالة تفتح</p>
+        <input class="lock-input" id="lockInput" type="text" autocomplete="off" spellcheck="false"
+               placeholder="اكتبي اليوم اللي قولتلك فيه بحبك" aria-label="الباسورد" />
+        <button class="lock-btn" id="lockBtn" type="button">افتحي الرسالة 💌</button>
+        <p class="lock-msg" id="lockMsg" role="status"></p>
+      </div>
+
+      <button class="letter-toggle-btn" id="closeLetterBtn" type="button">اقفلي الظرف</button>
+    </section>
+
+    <!-- 🎵 كارت الأغنية -->
+    <section class="section-card song-card" aria-label="أغنيتنا">
+      <h2 class="section-heading">أغنيتنا</h2>
+      <div class="song-player-ui">
+        <div class="song-thumb-wrap">
+          <!-- 🖼️ صورة الأغنية: الرقم H6ewVyRTceY هو الـ ID بتاع فيديو اليوتيوب. لو غيرت اللينك غيّره هنا كمان -->
+          <img id="songThumb" src="https://img.youtube.com/vi/H6ewVyRTceY/hqdefault.jpg" alt="صورة أغنية عايش معاك" loading="lazy" />
+          <span class="song-thumb-fallback" id="songThumbFallback" aria-hidden="true">🎵</span>
+        </div>
+        <div class="song-info">
+          <div class="song-tag">أغنيتنا</div>
+          <div class="song-title">عايش معاك</div>
+          <div class="song-platform">عمرو دياب · YouTube</div>
+        </div>
+      </div>
+      <!-- 🔗 مكان لينك الأغنية: غيّري اللينك اللي في href لو عايز لينك تاني -->
+      <a class="song-play-btn" href="https://www.youtube.com/watch?v=H6ewVyRTceY" target="_blank" rel="noopener">
+        <span>▶</span>
+        <span>شغّلي أغنيتنا</span>
+      </a>
+    </section>
+
+    <!-- 📅 عدّاد الحكاية -->
+    <section class="section-card" aria-label="عداد الحكاية">
+      <h2 class="section-heading">من يوم ما عرفتك</h2>
+      <h2 class="section-heading">2025/9/2</h2>
+      <div class="counter-total-box">
+        <div class="counter-total-number" id="totalDays">0</div>
+        <div class="counter-total-label">كل يوم بيعدي بيكون احلي بوجودك❣️
+            
+            
+        </div>
+      </div>
+      <div class="counter-grid">
+        <div class="counter-unit"><div class="counter-value" id="daysVal">0</div><div class="counter-label">يوم</div></div>
+        <div class="counter-unit"><div class="counter-value" id="hoursVal">0</div><div class="counter-label">ساعة</div></div>
+        <div class="counter-unit"><div class="counter-value" id="minutesVal">0</div><div class="counter-label">دقيقة</div></div>
+        <div class="counter-unit"><div class="counter-value" id="secondsVal">0</div><div class="counter-label">ثانية</div></div>
+      </div>
+      <div class="confession-card">
+        <div class="confession-title">اليوم اللي قلتلك فيه بحبك</div>
+        <div class="confession-date">2 ديسمبر 2025 — الساعة 1:58 ظهرًا </div>
+      </div>
+    </section>
+
+    <!-- 🎁 المفاجأة في آخر الموقع: كرتون الجميلة والوحش -->
+    <section class="section-card song-card" aria-label="المفاجأة">
+      <h2 class="section-heading">المفاجأة اللي في الآخر 🎁</h2>
+      <div class="song-player-ui">
+        <div class="song-thumb-wrap" style="width:96px;height:96px;background:linear-gradient(145deg,#8B5CF6,#4C1D95)">
+          <!-- 🖼️ صورة الكرتون: لو عايزة الصورة الحقيقية، شيلي كلمة display:none من الـ style وحطي الـ ID في src بدل XXXXXXXXXXX -->
+          <img id="toonThumb" src="https://m.media-amazon.com/images/I/81zeTGJ1FoL.jpg" alt="صورة كرتون الجميلة والوحش" style="display:block; width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <span class="song-thumb-fallback" aria-hidden="true" style="display:none; font-size:2.6rem">🥀</span>
+        </div>
+        <div class="song-info">
+          <div class="song-tag">كرتونك اللي متعرفيش تستغني عنه</div>
+          <div class="song-title">الجميلة والوحش</div>
+          <div class="song-platform">Beauty and the Beast (1991)</div>
+        </div>
+      </div>
+      <!-- 🔗🔗 هنا مكان لينك الكرتون (Beauty and the Beast 1991 بالعربي):
+           امسحي اللينك اللي في href وحطي لينك اليوتيوب بتاع الكرتون مكانه.
+           (اللينك الحالي بيفتح بحث يوتيوب عن الكرتون لحد ما تحطي اللينك الأصلي) -->
+      <a class="song-play-btn pulse-btn"
+         href="https://drive.google.com/file/d/1c-42RdlUD7V4IkaaT7TR5iS_jxS5qrip/view?usp=sharing
+         target="_blank" rel="noopener">
+        <span>▶</span>
+        <span>شغّلي الكرتون يحبيبي</span>
+      </a>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      /* ===== ❣️💕 رسالة البداية: بتقعد 12 ثانية (غيّري الرقم بين 10000 و15000) ===== */
+      var INTRO_MS = 12000;
+      var intro = document.getElementById('intro');
+
+      // قلوب طايرة في رسالة البداية
+      var icons = ['❣️', '💕'];
+      for (var h = 0; h < 16; h++) {
+        var s = document.createElement('span');
+        s.className = 'float-heart';
+        s.textContent = icons[h % 2];
+        s.style.left = (Math.random() * 94) + '%';
+        s.style.fontSize = (14 + Math.random() * 18) + 'px';
+        s.style.animationDuration = (8 + Math.random() * 8) + 's';
+        s.style.animationDelay = (Math.random() * 8) + 's';
+        intro.appendChild(s);
+      }
+
+      setTimeout(function () {
+        intro.classList.add('hide');
+        document.body.classList.remove('intro-active');
+        document.body.classList.add('ready');
+        window.scrollTo(0, 0);
+        setTimeout(function () { intro.style.display = 'none'; }, 1100);
+      }, INTRO_MS);
+
+      /* ===== 📸 صور الألبوم: غيّري image (لينك الصورة) و caption (الكلام تحت الصورة) =====
+         لو عايزة تزودي صورة: انسخي سطر { image: "...", caption: "..." } وحطيه قبل القوس ] */
+      var memories = [
+        { image: "https://i.postimg.cc/W1k8JLnR/Whats-App-Image-2026-11-11-at-4-04-28-PM.jpg", caption: "بنحب اليوم ده" },        // 👈 لينك الصورة 1
+        { image: "https://i.postimg.cc/pT2J79tM/Whats-App-Image-2026-11-11-at-4-12-31-PM.jpg", caption: "9/2 عدّت سنة مع بعض" },  // 👈 لينك الصورة 2
+        { image: "https://i.postimg.cc/HWv9ZsZ0/Whats-App-Image-2026-11-11-at-4-13-04-PM.jpg", caption: "أول مرة نخش سينما سوا" }, // 👈 لينك الصورة 3
+        { image: "https://i.postimg.cc/nhBKhKF8/Whats-App-Image-2026-11-11-at-4-13-27-PM.jpg", caption: "أول فطار سوا في رمضان" }, // 👈 لينك الصورة 4
+        { image: "https://i.postimg.cc/MHgRWHN9/Whats-App-Image-2026-11-11-at-4-13-57-PM.jpg", caption: "يوم ماتش المنتخب" },       // 👈 لينك الصورة 5
+        { image: "https://i.postimg.cc/br0Djg03/Whats-App-Image-2026-11-11-at-5-46-42-PM.jpg", caption: "قطه وفار😂" }  ,           // 👈 لينك الصورة 6
+        { image: "https://i.postimg.cc/bY7Hmk0N/Whats-App-Image-2026-11-20-at-9-24-20-AM.jpg", caption: "معايا في كل حاجه بحبك اوي" } ,            // 👈 لينك الصورة 7
+        { image: "https://i.postimg.cc/N0RkqMgt/Whats-App-Image-2026-11-20-at-9-42-39-AM.jpg", caption: "كنا في الصيف وبنروح البنك عشان التكييف" } ,            // 👈 لينك الصورة 8
+        { image: "https://i.postimg.cc/3rfpqpXM/Whats-App-Image-2026-11-20-at-9-42-43-AM.jpg", caption: "اليوم ده كان حر بس مش هننسي تفاصيله وكان يوم حلو اوووي ي بسكوته" } ,            // 👈 لينك الصورة 9
+      ];
+
+      var polaroid = document.getElementById('polaroid');
+      var albumImg = document.getElementById('albumImg');
+      var albumPh = document.getElementById('albumPlaceholder');
+      var dotsContainer = document.getElementById('galleryDots');
+      var captionEl = document.getElementById('galleryCaption');
+      var counterEl = document.getElementById('galleryCounter');
+      var wrapper = document.getElementById('galleryWrapper');
+      var currentIndex = 0;
+      var animating = false;
+      var tilts = ['-2deg', '2.2deg', '-1.2deg', '1.8deg', '-2.4deg', '1.2deg'];
+
+      memories.forEach(function (item, idx) {
+        if (item.image) { var pre = new Image(); pre.src = item.image; }
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'gallery-dot' + (idx === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'عرض الصورة رقم ' + (idx + 1));
+        dot.addEventListener('click', function () { goTo(idx, idx > currentIndex ? 1 : -1); });
+        dotsContainer.appendChild(dot);
+      });
+
+      albumImg.addEventListener('error', function () {
+        albumImg.style.display = 'none';
+        albumPh.style.display = 'flex';
+      });
+
+      function render() {
+        var item = memories[currentIndex];
+        polaroid.style.setProperty('--tilt', tilts[currentIndex % tilts.length]);
+        albumImg.style.display = 'block';
+        albumPh.style.display = 'none';
+        var url = item.image ? item.image.trim() : '';
+        if (url) { albumImg.src = url; albumImg.alt = item.caption; }
+        else { albumImg.removeAttribute('src'); albumImg.style.display = 'none'; albumPh.style.display = 'flex'; }
+        captionEl.textContent = item.caption;
+        counterEl.textContent = (currentIndex + 1) + ' / ' + memories.length;
+        dotsContainer.querySelectorAll('.gallery-dot').forEach(function (d, i) {
+          d.classList.toggle('active', i === currentIndex);
+        });
+      }
+
+      function goTo(index, dir) {
+        if (animating) return;
+        var target = index;
+        if (target < 0) target = memories.length - 1;
+        if (target >= memories.length) target = 0;
+        if (target === currentIndex) return;
+        animating = true;
+        var out = dir > 0 ? 'out-next' : 'out-prev';
+        var inn = dir > 0 ? 'in-next' : 'in-prev';
+        polaroid.classList.add(out);
+        setTimeout(function () {
+          currentIndex = target;
+          render();
+          polaroid.classList.remove(out);
+          polaroid.classList.add(inn);
+          setTimeout(function () { polaroid.classList.remove(inn); animating = false; }, 400);
+        }, 270);
+      }
+
+      document.getElementById('prevBtn').addEventListener('click', function () { goTo(currentIndex - 1, -1); });
+      document.getElementById('nextBtn').addEventListener('click', function () { goTo(currentIndex + 1, 1); });
+
+      var touchStartX = 0;
+      wrapper.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+      wrapper.addEventListener('touchend', function (e) {
+        var diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 40) { diff > 0 ? goTo(currentIndex + 1, 1) : goTo(currentIndex - 1, -1); }
+      }, { passive: true });
+
+      render();
+
+      /* ===== 🔑 الباسورد: يوم الاعتراف = 2 ديسمبر 2025 (غيّريه لو عايز يوم تاني) ===== */
+      var CONFESSION = { day: 2, month: 12, year: 2025 };
+
+      var envelopeStage = document.getElementById('envelopeStage');
+      var envelopeBtn = document.getElementById('envelopeBtn');
+      var envelopeBox = document.getElementById('envelopeBox');
+      var closeLetterBtn = document.getElementById('closeLetterBtn');
+      var lockPanel = document.getElementById('lockPanel');
+      var lockInput = document.getElementById('lockInput');
+      var lockMsg = document.getElementById('lockMsg');
+      var envelopeHint = document.getElementById('envelopeHint');
+      var unlocked = false;
+
+      function toLatinDigits(s) {
+        return s.replace(/[٠-٩]/g, function (d) { return String(d.charCodeAt(0) - 1632); });
+      }
+
+      // بيقبل: 2/12/2025 — 02-12-2025 — 2.12 — ٢/١٢/٢٠٢٥ — 2 ديسمبر — 2 ديسمبر 2025
+      function isRightDate(raw) {
+        var s = toLatinDigits(String(raw).toLowerCase());
+        var nums = (s.match(/\d+/g) || []).map(Number);
+        if (!nums.length) return false;
+        var y = CONFESSION.year, yy = y % 100;
+        var ok = function (n) { return n === CONFESSION.day || n === CONFESSION.month || n === y || n === yy; };
+        if (/ديسمبر|دسمبر|december|dec/.test(s)) {
+          return nums.indexOf(CONFESSION.day) !== -1 && nums.every(function (n) { return n === CONFESSION.day || n === y || n === yy; });
+        }
+        return nums.length >= 2 && nums.indexOf(CONFESSION.day) !== -1 && nums.indexOf(CONFESSION.month) !== -1 && nums.every(ok);
+      }
+
+      function openEnvelope() {
+        if (envelopeStage.classList.contains('open')) return;
+        envelopeBox.classList.add('wiggle');
+        setTimeout(function () {
+          envelopeBox.classList.remove('wiggle');
+          envelopeStage.classList.add('open');
+          envelopeBtn.setAttribute('aria-expanded', 'true');
+        }, 220);
+      }
+
+      function closeEnvelope() {
+        envelopeStage.classList.remove('open');
+        envelopeBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      function tryUnlock() {
+        if (isRightDate(lockInput.value)) {
+          unlocked = true;
+          lockMsg.textContent = 'صح يا قلبي 💜';
+          envelopeHint.textContent = 'اتفتحت.. دي رسالتك يا بسكوته 💌';
+          setTimeout(function () { lockPanel.classList.remove('show'); openEnvelope(); }, 650);
+        } else {
+          lockMsg.textContent = 'مش اليوم ده يا بسكوته 🙈 فكّري تاني (اكتبيه بالأرقام زي: يوم/شهر/سنة)';
+          lockPanel.classList.remove('shake');
+          void lockPanel.offsetWidth;
+          lockPanel.classList.add('shake');
+          lockInput.select();
+        }
+      }
+
+      envelopeBtn.addEventListener('click', function () {
+        if (envelopeStage.classList.contains('open')) { closeEnvelope(); return; }
+        if (unlocked) { openEnvelope(); return; }
+        lockPanel.classList.add('show');
+        lockMsg.textContent = '';
+        setTimeout(function () { lockInput.focus(); }, 150);
+      });
+      document.getElementById('lockBtn').addEventListener('click', tryUnlock);
+      lockInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); } });
+      closeLetterBtn.addEventListener('click', closeEnvelope);
+
+      /* ===== صورة الأغنية (لو ما اتحملتش بتظهر 🎵) ===== */
+      var songThumb = document.getElementById('songThumb');
+      var songThumbFallback = document.getElementById('songThumbFallback');
+      songThumb.addEventListener('error', function () {
+        songThumb.style.display = 'none';
+        songThumbFallback.style.display = 'block';
+      });
+
+      /* ===== 📅 العدّاد: من 2 سبتمبر 2025 الساعة 10 صباحًا بتوقيت القاهرة (غيّريه لو عايز) ===== */
+      var startDate = new Date('2025-09-02T10:00:00+03:00').getTime();
+      var totalDaysEl = document.getElementById('totalDays');
+      var daysValEl = document.getElementById('daysVal');
+      var hoursValEl = document.getElementById('hoursVal');
+      var minutesValEl = document.getElementById('minutesVal');
+      var secondsValEl = document.getElementById('secondsVal');
+
+      function updateCounter() {
+        var diff = Math.max(0, Date.now() - startDate);
+        var totalSeconds = Math.floor(diff / 1000);
+        var days = Math.floor(totalSeconds / 86400);
+        totalDaysEl.textContent = days;
+        daysValEl.textContent = days;
+        hoursValEl.textContent = Math.floor((totalSeconds % 86400) / 3600);
+        minutesValEl.textContent = Math.floor((totalSeconds % 3600) / 60);
+        secondsValEl.textContent = totalSeconds % 60;
+      }
+      updateCounter();
+      setInterval(updateCounter, 1000);
+    })();
+  </script>
+</body>
+</html>
